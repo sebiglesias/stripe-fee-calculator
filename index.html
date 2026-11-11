@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Google tag (gtag.js) GA4 -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-2BNDBQP0W7"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-2BNDBQP0W7');
+  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stripe Fee Calculator — Net Payout, Invoice & PayPal Comparison</title>
+  <!-- PWA -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#6366f1">
+  <link rel="apple-touch-icon" href="icon.svg">
+  <meta name="description" content="Calculate your exact Stripe payment processing fees, net take-home bank payout, and reverse invoice billing amounts. Compare fees with PayPal and Square.">
+  <meta name="keywords" content="stripe fee calculator, stripe processing fees, how much does stripe take, stripe net payout calculator, stripe invoice fee calculator, stripe vs paypal fees">
+  <link rel="canonical" href="https://sebiglesias.com.ar/stripe-fee-calculator/">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Stripe Fee Calculator — Net Payout & Invoice Calculator">
+  <meta property="og:description" content="Calculate your net earnings on Stripe charges and reverse calculate invoice totals to cover merchant fees.">
+  <meta property="og:url" content="https://sebiglesias.com.ar/stripe-fee-calculator/">
+  <meta property="og:site_name" content="Stripe Fee Calculator">
+  <meta property="og:locale" content="en_US">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Stripe Fee Calculator">
+  <meta name="twitter:description" content="Calculate exact Stripe fees, net payout, and client invoice amounts.">
+
+  <!-- Google AdSense -->
+  <meta name="google-adsense-account" content="ca-pub-3381238987477190">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3381238987477190" crossorigin="anonymous"></script>
+
+  <link rel="stylesheet" href="styles.css">
+
+  <!-- Structured Data: WebApplication -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Stripe Fee Calculator & Net Payout Estimator",
+    "url": "https://sebiglesias.com.ar/stripe-fee-calculator/",
+    "description": "Calculate Stripe merchant processing fees, net take-home payouts, and reverse billings.",
+    "applicationCategory": "FinanceApplication",
+    "operatingSystem": "All",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "author": {
+      "@type": "Person",
+      "name": "Sebastián Iglesias",
+      "url": "https://sebiglesias.com.ar"
+    }
+  }
+  </script>
+
+  <!-- Structured Data: FAQPage -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What is Stripe's standard transaction fee?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "In the United States, Stripe charges a standard rate of 2.9% + $0.30 per successful credit or debit card charge for domestic transactions."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How much does Stripe charge for international cards?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Stripe adds an additional 1.5% fee for international cards (totaling 4.4% + $0.30), plus an additional 1.0% fee if currency conversion is required."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How can I invoice clients so they cover the Stripe fee?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Use our 'I want to receive' reverse mode. To receive a clean $100.00 net via standard domestic card, you must invoice the client $103.30 because (103.30 x 2.9%) + $0.30 = $3.30 in processing fees."
+        }
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+
+  <header class="top-bar">
+    <div class="top-bar-inner">
+      <a href="https://sebiglesias.com.ar/" class="back-link">
+        ← Back to sebiglesias.com.ar
+      </a>
+      <span style="font-size: 0.8rem; color: #64748b;">Official Stripe US Rates (2.9% + $0.30)</span>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="header">
+      <div class="badge-tag">💳 E-Commerce & Merchant Fees</div>
+      <h1 class="title">Stripe Fee Calculator</h1>
+      <p class="subtitle">Calculate your net bank payout, processing fees, and reverse invoice amounts to ensure you keep 100% of your earnings.</p>
+    </section>
+
+    <!-- Main Card -->
+    <section class="card" aria-label="Fee calculator controls">
+      <!-- Mode segmented -->
+      <div class="mode-segmented" role="group">
+        <button type="button" class="mode-btn active" data-mode="charge">
+          💵 I want to charge an amount
+        </button>
+        <button type="button" class="mode-btn" data-mode="receive">
+          🎯 I want to receive exact net payout
+        </button>
+      </div>
+
+      <!-- Amount Input -->
+      <div class="form-group">
+        <label id="input-amount-label" for="input-amount" class="form-label">
+          Transaction Amount to Charge ($)
+        </label>
+        <div class="input-with-symbol">
+          <span class="input-symbol-prefix">$</span>
+          <input type="number" id="input-amount" class="form-input-lg" min="1" step="10" value="100">
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="form-group">
+          <label for="select-card-type" class="form-label">Payment Method</label>
+          <select id="select-card-type" class="form-select">
+            <option value="domestic" selected>Standard US Card (2.9% + $0.30)</option>
+            <option value="international">International Card (4.4% + $0.30)</option>
+            <option value="terminal">Stripe Terminal In-Person (2.7% + $0.05)</option>
+            <option value="manual">Manual Key-in / Virtual Terminal (3.4% + $0.30)</option>
+          </select>
+        </div>
+
+        <div class="form-group" style="display: flex; flex-direction: column; justify-content: center;">
+          <label class="toggle-row">
+            <input type="checkbox" id="check-currency">
+            <span>Currency Conversion (+1.0%)</span>
+          </label>
+          <label class="toggle-row">
+            <input type="checkbox" id="check-billing">
+            <span>Stripe Billing / Recurring Invoicing (+0.5%)</span>
+          </label>
+        </div>
+      </div>
+    </section>
+
+    <!-- Main Results Hero -->
+    <section class="result-hero" aria-live="polite">
+      <div id="hero-label" class="hero-label">Net Payout in Your Bank</div>
+      <div id="hero-amount" class="hero-amount">$96.80</div>
+      <div id="hero-sub" class="hero-sub">From an initial $100.00 charge</div>
+
+      <div class="hero-meta-grid">
+        <div class="meta-box">
+          <span class="label">Total Stripe Fee</span>
+          <span id="res-total-fee" class="value">$3.20</span>
+        </div>
+        <div class="meta-box">
+          <span class="label">Effective Rate</span>
+          <span id="res-effective-rate" class="value">3.20%</span>
+        </div>
+        <div class="meta-box">
+          <span class="label">Gross Transaction</span>
+          <span id="res-gross-total" class="value">$100.00</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Fee Breakdown Card -->
+    <section class="card">
+      <h2 style="font-size: 1.15rem; font-weight: 800; margin-bottom: 0.75rem;">
+        Fee Breakdown Details
+      </h2>
+      <table class="breakdown-table">
+        <tbody>
+          <tr>
+            <td>Variable Percentage Fee</td>
+            <td id="row-percentage-fee">2.90% ($2.90)</td>
+          </tr>
+          <tr>
+            <td>Fixed Transaction Fee</td>
+            <td id="row-fixed-fee">$0.30</td>
+          </tr>
+          <tr>
+            <td><strong>Total Deductions</strong></td>
+            <td id="row-total-fee" style="color: #ef4444;">$3.20</td>
+          </tr>
+          <tr style="border-top: 2px solid var(--border);">
+            <td><strong>Net Funds Deposited (Take-Home)</strong></td>
+            <td id="row-net-payout" style="color: var(--primary); font-size: 1.15rem;">$96.80</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- Payment Processor Comparison -->
+    <section class="card">
+      <h2 style="font-size: 1.15rem; font-weight: 800; margin-bottom: 0.35rem;">
+        Processor Comparison (Take-Home on This Transaction)
+      </h2>
+      <div class="proc-grid">
+        <div class="proc-card active">
+          <div class="proc-name">Stripe</div>
+          <div id="comp-stripe-fee" class="proc-fee">Fee: $3.20 (2.9% + $0.30)</div>
+          <div id="comp-stripe-net" class="proc-net">$96.80</div>
+        </div>
+        <div class="proc-card">
+          <div class="proc-name">Square (Online)</div>
+          <div id="comp-square-fee" class="proc-fee">Fee: $3.20 (2.9% + $0.30)</div>
+          <div id="comp-square-net" class="proc-net">$96.80</div>
+        </div>
+        <div class="proc-card">
+          <div class="proc-name">PayPal (US Goods & Services)</div>
+          <div id="comp-paypal-fee" class="proc-fee">Fee: $3.98 (3.49% + $0.49)</div>
+          <div id="comp-paypal-net" class="proc-net">$96.02</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Ad Container -->
+    <div class="ad-slot-container" style="margin: 32px auto 24px; padding: 16px; max-width: 728px; background: rgba(125,125,125,0.05); border: 1px dashed rgba(125,125,125,0.2); border-radius: 8px; text-align: center; min-height: 100px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+      <div style="font-size: 0.7rem; color: #888; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">Advertisement</div>
+      <ins class="adsbygoogle"
+           style="display:block; width: 100%;"
+           data-ad-client="ca-pub-3381238987477190"
+           data-ad-slot="auto"
+           data-ad-format="auto"
+           data-full-width-responsive="true"></ins>
+      <script>
+           (adsbygoogle = window.adsbygoogle || []).push({});
+      </script>
+    </div>
+
+    <!-- FAQ Section -->
+    <section class="faq-section">
+      <h2 class="faq-title">Frequently Asked Questions</h2>
+
+      <article class="faq-item">
+        <button type="button" class="faq-question">
+          <span>Are Stripe fees refunded when I issue a customer refund?</span>
+          <span class="faq-icon">▼</span>
+        </button>
+        <div class="faq-answer">
+          No. Like most modern payment processors, Stripe does not return the original processing fees when you refund a customer charge. If you refund a $100 payment, Stripe debits the full $100 from your account balance, meaning you absorb the initial $3.20 processing fee.
+        </div>
+      </article>
+
+      <article class="faq-item">
+        <button type="button" class="faq-question">
+          <span>What is the reverse fee calculation formula?</span>
+          <span class="faq-icon">▼</span>
+        </button>
+        <div class="faq-answer">
+          To receive a target net amount (N) after percentage fee (P) and fixed fee (F), calculate: Total Invoice = (N + F) / (1 - P). For example, to keep $1,000 net after 2.9% + $0.30: (1000 + 0.30) / (1 - 0.029) = $1,030.18.
+        </div>
+      </article>
+
+      <article class="faq-item">
+        <button type="button" class="faq-question">
+          <span>How often does Stripe transfer money to my bank?</span>
+          <span class="faq-icon">▼</span>
+        </button>
+        <div class="faq-answer">
+          In the United States, Stripe operates on an automatic 2-business-day rolling payout schedule for established accounts. You can also configure daily, weekly, or monthly batch payouts inside your Stripe Dashboard.
+        </div>
+      </article>
+    </section>
+
+    <!-- Cross Sell Microapps -->
+    <section class="cross-sell">
+      <h3>More Business & Finance Tools by Sebastián Iglesias</h3>
+      <div class="cross-grid">
+        <a href="https://sebiglesias.com.ar/freelance-rate-calculator/" class="cross-card">
+          <span class="cross-icon">💼</span>
+          <div class="cross-info">
+            <strong>Freelance Rate Calculator</strong>
+            <span>Billable hours and pricing</span>
+          </div>
+        </a>
+        <a href="https://sebiglesias.com.ar/salary-to-hourly/" class="cross-card">
+          <span class="cross-icon">💵</span>
+          <div class="cross-info">
+            <strong>Salary to Hourly</strong>
+            <span>Convert annual wages</span>
+          </div>
+        </a>
+        <a href="https://sebiglesias.com.ar/credit-card-payoff/" class="cross-card">
+          <span class="cross-icon">💳</span>
+          <div class="cross-info">
+            <strong>Credit Card Payoff</strong>
+            <span>Debt elimination simulator</span>
+          </div>
+        </a>
+        <a href="https://sebiglesias.com.ar/cd-calculator/" class="cross-card">
+          <span class="cross-icon">🏦</span>
+          <div class="cross-info">
+            <strong>CD Calculator</strong>
+            <span>Certificate of Deposit APY</span>
+          </div>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>&copy; 2026 Stripe Fee Calculator — Built by <a href="https://sebiglesias.com.ar">Sebastián Iglesias</a>.</p>
+    <p style="margin-top: 0.25rem; font-size: 0.75rem;">Independent tool not affiliated with or endorsed by Stripe, Inc. or PayPal, Inc.</p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,17 @@
+{
+  "name": "Stripe Fee Calculator — Net Payout, Invoice & International Processing",
+  "short_name": "Stripe Calculator",
+  "description": "Calculate exact Stripe processing fees, net payout in hand, reverse invoice billing amounts, and compare against PayPal and Square.",
+  "start_url": "/stripe-fee-calculator/",
+  "display": "standalone",
+  "background_color": "#4338ca",
+  "theme_color": "#6366f1",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
