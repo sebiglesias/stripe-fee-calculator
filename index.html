@@ -19,6 +19,17 @@
   <meta name="description" content="Calculate your exact Stripe payment processing fees, net take-home bank payout, and reverse invoice billing amounts. Compare fees with PayPal and Square.">
   <meta name="keywords" content="stripe fee calculator, stripe processing fees, how much does stripe take, stripe net payout calculator, stripe invoice fee calculator, stripe vs paypal fees">
   <link rel="canonical" href="https://sebiglesias.com.ar/stripe-fee-calculator/">
+  <link rel="alternate" hreflang="en" href="https://sebiglesias.com.ar/stripe-fee-calculator/">
+  <link rel="alternate" hreflang="es" href="https://sebiglesias.com.ar/stripe-fee-calculator/?lang=es">
+  <link rel="alternate" hreflang="de" href="https://sebiglesias.com.ar/stripe-fee-calculator/?lang=de">
+  <link rel="alternate" hreflang="fr" href="https://sebiglesias.com.ar/stripe-fee-calculator/?lang=fr">
+  <link rel="alternate" hreflang="it" href="https://sebiglesias.com.ar/stripe-fee-calculator/?lang=it">
+  <link rel="alternate" hreflang="pt" href="https://sebiglesias.com.ar/stripe-fee-calculator/?lang=pt">
+  <link rel="alternate" hreflang="nl" href="https://sebiglesias.com.ar/stripe-fee-calculator/?lang=nl">
+  <link rel="alternate" hreflang="sv" href="https://sebiglesias.com.ar/stripe-fee-calculator/?lang=sv">
+  <link rel="alternate" hreflang="da" href="https://sebiglesias.com.ar/stripe-fee-calculator/?lang=da">
+  <link rel="alternate" hreflang="pl" href="https://sebiglesias.com.ar/stripe-fee-calculator/?lang=pl">
+  <link rel="alternate" hreflang="x-default" href="https://sebiglesias.com.ar/stripe-fee-calculator/">
 
   <!-- Open Graph -->
   <meta property="og:type" content="website">
@@ -99,6 +110,18 @@
 <body>
 
   <header class="top-bar">
+<div style='display:flex;justify-content:flex-end;margin-bottom:.5rem'><select id="lang-select" aria-label="Language" style="background:#24221C;border:1px solid rgba(242,239,230,.18);color:#F2EFE6;font-family:'JetBrains Mono',monospace;font-size:.72rem;padding:3px 6px;border-radius:3px;cursor:pointer;margin-left:auto">
+  <option value="en">🇺🇸 EN</option>
+  <option value="es">🇪🇸 ES</option>
+  <option value="de">🇩🇪 DE</option>
+  <option value="fr">🇫🇷 FR</option>
+  <option value="it">🇮🇹 IT</option>
+  <option value="pt">🇵🇹 PT</option>
+  <option value="nl">🇳🇱 NL</option>
+  <option value="sv">🇸🇪 SV</option>
+  <option value="da">🇩🇰 DA</option>
+  <option value="pl">🇵🇱 PL</option>
+</select></div>
     <div class="top-bar-inner">
       <a href="https://sebiglesias.com.ar/" class="back-link">
         ← Back to sebiglesias.com.ar
@@ -325,5 +348,41 @@
   </footer>
 
   <script src="app.js"></script>
+
+<script>
+/* I18N_AUTO_ENGINE */
+(function(){
+  const DICT = {"en": {"title": "Stripe & PayPal Fee Calculator<span class='accent'>.</span>", "sub": "2.9% + $0.30 processing fee, international cards & reverse invoice gross-up"}, "es": {"title": "Calculadora de Comisiones Stripe y PayPal<span class='accent'>.</span>", "sub": "Calculá cuánto recibís neto o cuánto cobrar para cubrir la comisión"}, "de": {"title": "Stripe & PayPal Gebührenrechner<span class='accent'>.</span>", "sub": "Transaktionsgebühren abziehen oder Rechnungsbetrag rückwärts aufschlagen"}, "fr": {"title": "Calculateur Frais Stripe & PayPal<span class='accent'>.</span>", "sub": "Calculez le net perçu ou le montant à facturer pour couvrir les commissions"}, "it": {"title": "Calcolatore Commissioni Stripe e PayPal<span class='accent'>.</span>", "sub": "Calcola l'importo netto ricevuto o quanto addebitare al cliente"}, "pt": {"title": "Calculadora de Taxas Stripe e PayPal<span class='accent'>.</span>", "sub": "Descubra quanto recebe líquido ou quanto cobrar para repassar a taxa"}, "nl": {"title": "Stripe & PayPal Transactiekosten Calculator<span class='accent'>.</span>", "sub": "Bereken netto uitbetaling of het bruto factuurbedrag inclusief kosten"}, "sv": {"title": "Stripe & PayPal Avgiftskalkylator<span class='accent'>.</span>", "sub": "Räkna ut nettobelopp eller hur mycket du måste fakturera för att täcka avgiften"}, "da": {"title": "Stripe & PayPal Gebyrberegner<span class='accent'>.</span>", "sub": "Beregn nettoudbetaling eller beløbet du skal opkræve for at dække gebyret"}, "pl": {"title": "Kalkulator Prowizji Stripe i PayPal<span class='accent'>.</span>", "sub": "Oblicz kwotę netto na koncie lub ile policzyć klientowi by pokryć prowizję"}};
+  const h1El = document.querySelector('h1');
+  const subEl = document.querySelector('.sub') || document.querySelector('header p');
+  const selEl = document.getElementById('lang-select');
+  function applyLang(lang) {
+    const entry = DICT[lang] || DICT.en;
+    document.documentElement.lang = lang;
+    if (h1El && entry.title) h1El.innerHTML = entry.title;
+    if (subEl && entry.sub) subEl.textContent = entry.sub;
+    if (lang !== 'en' && entry.sub) {
+      document.title = (h1El ? h1El.textContent : '') + ' — ' + entry.sub;
+    }
+  }
+  const params = new URLSearchParams(window.location.search);
+  const init = params.get('lang') || localStorage.getItem('stripe-fee-calculator-lang') || 'en';
+  const valid = DICT[init] ? init : 'en';
+  if (selEl) {
+    selEl.value = valid;
+    selEl.addEventListener('change', function(e) {
+      const nl = e.target.value;
+      localStorage.setItem('stripe-fee-calculator-lang', nl);
+      const u = new URL(window.location.href);
+      if (nl === 'en') u.searchParams.delete('lang');
+      else u.searchParams.set('lang', nl);
+      window.history.replaceState({}, '', u);
+      applyLang(nl);
+    });
+  }
+  applyLang(valid);
+})();
+</script>
+
 </body>
 </html>
